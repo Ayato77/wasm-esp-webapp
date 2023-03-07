@@ -1,45 +1,34 @@
 import './App.css';
+import Login from "./Login";
+import Workspace from "./Workspace";
+import useLocalStorage from "./hooks/UseLocalStorage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {useState} from "react";
 
 function App() {
-  const initialValues = {mailAddress:"", password: ""};
-  const [formValues, setFormValues] = useState();
+    const [isAuthenticated, setAuthenticated] = useLocalStorage('isAuthenticated',false);
 
-  const handleChange = (e) => {
-    const {name, value} = e.target;
-    setFormValues({...formValues, [name]: value});
-    //console.log(formValues)
-  }
+    if(!isAuthenticated){
+        return (
+            <BrowserRouter>
+                <main className={"App"}>
+                    <Routes>
+                        <Route exact path="/" element={<Login setAuthenticated = {setAuthenticated}/>}/>
+                    </Routes>
+                </main>
+            </BrowserRouter>
+        );
+    }
 
-  return (
-    <div className="formContainer">
-      <form>
-        <h1>Login Form</h1>
-        <hr />
-        <div className="uiForm">
-          <div className="formField">
-            <label>E-mail address</label>
-            <input
-                type={"text"}
-                placeholder={"E-mail address"}
-                name={"mailAdress"}
-                onChange={(e) => handleChange(e)}
-            />
-          </div>
-          <div className="formField">
-            <label>Password</label>
-            <input
-                type={"text"}
-                placeholder={"Password"}
-                name={"password"}
-                onChange={(e) => handleChange(e)}
-            />
-          </div>
-        </div>
-        <button className={"submitButton"}>Login</button>
-      </form>
-    </div>
-  );
+    return (
+        <BrowserRouter>
+            <main className={"App"}>
+                <Routes>
+                    <Route exact path="/" element={<Workspace setAuthenticated = {setAuthenticated}/>}/>
+                </Routes>
+            </main>
+        </BrowserRouter>
+    );
 }
 
 export default App;
